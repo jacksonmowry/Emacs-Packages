@@ -17,7 +17,8 @@
   (edd-input-path)
   (edd-print-args)
   (edd-test-dd)
-  (edd-confirm-command))
+  (edd-confirm-command)
+  (edd-dd))
 
 (defun edd-print-devices ()
        (let ((inhibit-read-only t))
@@ -27,7 +28,7 @@
 (defun edd-output-path ()
     "Command to set the output file for dd"
   (interactive)
-  (setq output-path (read-directory-name "Output Device Path: " "/dev/")))
+  (setq output-path (read-file-name "Output Device Path: " "/dev/")))
 
 (defun edd-input-path ()
   "Command to select the iso file for dd"
@@ -42,13 +43,23 @@
 
 (defun edd-test-dd ()
   "Replace this later when dd gets implemented"
-  (edd-print (format "\ndd if = %s of = %s status=progress\n" input-path output-path)))
+  (edd-print (format "\ndd if=%s of=%s status=progress\n" input-path output-path)))
+
+(defun edd-dd ()
+  "Runs dd with user specified paths"
+  (async-shell-command (format "sudo dd if=%s of=%s status=progress" input-path output-path) "edd")
+  (setq proc (get-buffer-process "edd"))
+  (if (process-live-p proc)
+      ()
+    (message "dd complete!")))
 
 (defun edd-confirm-command ()
   "Asks the user to confirm the exact dd command to be run"
   (if (y-or-n-p "Is the above command correct?")
       (edd-print "\ndd starting")
-    (edd-print "\ndd aborting")))
+    (progn
+      (edd-print "\ndd aborting")
+      (error "Please Try Again"))))
 
 (defun edd-print (string)
   "Prints to the edd buffer with each string passed"

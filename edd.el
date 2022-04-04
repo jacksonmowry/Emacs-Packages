@@ -1,5 +1,6 @@
 ;;; custom/edd.el -*- lexical-binding: t; -*-
 
+
 (defun edd ()
   "Simple dd interface within emacs"
   (interactive)
@@ -16,7 +17,7 @@
   (edd-output-path)
   (edd-input-path)
   (edd-print-args)
-  (edd-test-dd)
+  (edd-test-output)
   (edd-confirm-command)
   (edd-dd))
 
@@ -41,17 +42,13 @@
       (edd-print (format "\nOutput Device Path: %s\n" output-path))
       (edd-print (format "Input ISO File: %s\n" input-path)))
 
-(defun edd-test-dd ()
+(defun edd-test-output ()
   "Replace this later when dd gets implemented"
   (edd-print (format "\ndd if=%s of=%s status=progress\n" input-path output-path)))
 
 (defun edd-dd ()
   "Runs dd with user specified paths"
-  (async-shell-command (format "sudo dd if=%s of=%s status=progress" input-path output-path) "edd")
-  (setq proc (get-buffer-process "edd"))
-  (if (process-live-p proc)
-      ()
-    (message "dd complete!")))
+  (async-shell-command (format "sudo dd if=%s of=%s status=progress" input-path output-path) "edd"))
 
 (defun edd-confirm-command ()
   "Asks the user to confirm the exact dd command to be run"

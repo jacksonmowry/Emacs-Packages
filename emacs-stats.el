@@ -16,8 +16,9 @@
   (clear-screen)
   (stats-print (stats-display-options))
   (setq stats-func (read-number "Select a Function: "))
-;;  (stats-print (stats-dispatcher))
-  (stats-print (emacs-linear-regression x-data y-data))
+  (clear-screen)
+  (stats-print "Here are the results\n")
+  (stats-print (stats-dispatcher))
   )
 
 
@@ -82,7 +83,7 @@
 (defun emacs-linear-regression (x y)
   "Returns the eqution for the linear regression"
   (interactive)
-  (format "y = %s*x + %s" (b-one x y) (b-zero x y)))
+  (format "y = %s*x + %s\nr = %s\nr^2 = %.4s%%" (b-one x y) (b-zero x y) (stats-linear-r x y) (* 100 (* (stats-linear-r x y) (stats-linear-r x y)))))
 
 (defun xy-product-calc (x y)
   "Calcultes the product of x and y"
@@ -116,3 +117,10 @@
     (setq b1-top (- (* (length x-values) (-sum (xy-product-calc x-values y-values))) (* (-sum x-values) (-sum y-values))))
     (setq b1-bottom (- (* (length x-values) (-sum (squared x-values))) (* (-sum x-values) (-sum x-values)))))
   (/ (float b1-top) (float b1-bottom)))
+
+(defun stats-linear-r (x y)
+  "Calculates the Correlation Coefficient r"
+  (let ((x-values x) (y-values y))
+    (setq r-top (- (* (length x-values) (-sum (xy-product-calc x-values y-values))) (* (-sum x-values) (-sum y-values))))
+    (setq r-bottom (sqrt (* (- (* (length x-values) (-sum (squared x-values))) (-sum (squared x-values))) (- (* (length x-values) (-sum (squared y-values))) (-sum (squared y-values)))))))
+    (/ (float r-top) (float r-bottom)))

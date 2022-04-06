@@ -2682,8 +2682,8 @@
   "Returns the eqution for the linear regression"
   (interactive)
   (message "y = %s*x + %s" (b-one x y) (b-zero x y)))
-
 (emacs-linear-regression x-values-original y-values-original)
+(measure-time (emacs-linear-regression x-values-original y-values-original))
 
 (defun xy-product-calc (x y)
   "Calcultes the product of x and y"
